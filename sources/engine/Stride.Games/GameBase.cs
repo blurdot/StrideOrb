@@ -634,6 +634,7 @@ namespace Stride.Games
                 beginDrawSuccessful = BeginDraw();
 
                 // Reset the time of the next frame
+                /*
                 for (int i = 0; i < updateCount && !IsExiting; i++)
                 {
                     UpdateTime.Update(UpdateTime.Total + elapsedTimePerUpdate, elapsedTimePerUpdate, true);
@@ -643,6 +644,9 @@ namespace Stride.Games
                     }
                     totalElapsedTime += elapsedTimePerUpdate;
                 }
+                */
+
+                totalElapsedTime += elapsedTimePerUpdate;
 
                 if (drawFrame && !IsExiting && GameSystems.IsFirstUpdateDone)
                 {
