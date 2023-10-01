@@ -625,7 +625,7 @@ namespace Stride.Games
         /// <param name="drawFrame">
         /// Draw a frame.
         /// </param>
-        protected void RawTick(TimeSpan elapsedTimePerUpdate, int updateCount = 1, float drawInterpolationFactor = 0, bool drawFrame = true)
+        protected virtual void RawTick(TimeSpan elapsedTimePerUpdate, int updateCount = 1, float drawInterpolationFactor = 0, bool drawFrame = true)
         {
             bool beginDrawSuccessful = false;
             TimeSpan totalElapsedTime = TimeSpan.Zero;
@@ -634,7 +634,6 @@ namespace Stride.Games
                 beginDrawSuccessful = BeginDraw();
 
                 // Reset the time of the next frame
-                /*
                 for (int i = 0; i < updateCount && !IsExiting; i++)
                 {
                     UpdateTime.Update(UpdateTime.Total + elapsedTimePerUpdate, elapsedTimePerUpdate, true);
@@ -644,7 +643,6 @@ namespace Stride.Games
                     }
                     totalElapsedTime += elapsedTimePerUpdate;
                 }
-                */
 
                 totalElapsedTime += elapsedTimePerUpdate;
 
@@ -680,7 +678,7 @@ namespace Stride.Games
             }
         }
 
-        private void CheckEndRun()
+        protected void CheckEndRun()
         {
             if (IsExiting && IsRunning && isEndRunRequired)
             {
