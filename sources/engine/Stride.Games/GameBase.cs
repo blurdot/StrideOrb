@@ -535,14 +535,14 @@ namespace Stride.Games
                     elapsedAdjustedTime = maximumElapsedTime;
                 }
 
-                bool drawFrame = true;
+                int incrementDrawFrameCount = 1;
                 int updateCount = 1;
                 var singleFrameElapsedTime = elapsedAdjustedTime;
                 var drawLag = 0L;
 
                 if (suppressDraw || Window.IsMinimized && DrawWhileMinimized == false)
                 {
-                    drawFrame = false;
+                    incrementDrawFrameCount = 0;
                     suppressDraw = false;
                 }
 
@@ -574,7 +574,7 @@ namespace Stride.Games
                     }
                     else if (updateCount == 0)
                     {
-                        drawFrame = false;
+                        incrementDrawFrameCount = 0;
                         // If there is no need for update, then exit
                         return;
                     }
@@ -584,7 +584,7 @@ namespace Stride.Games
                     singleFrameElapsedTime = TargetElapsedTime;
                 }
 
-                RawTick(singleFrameElapsedTime, updateCount, drawLag / (float)TargetElapsedTime.Ticks, drawFrame);
+                RawTick(singleFrameElapsedTime, updateCount, drawLag / (float)TargetElapsedTime.Ticks, incrementDrawFrameCount);
 
                 var window = gamePlatform.MainWindow;
                 if (gamePlatform.IsBlockingRun) // throttle fps if Game.Tick() called from internal main loop
@@ -622,10 +622,10 @@ namespace Stride.Games
         /// <param name="drawInterpolationFactor">
         /// See <see cref="DrawInterpolationFactor"/>
         /// </param>
-        /// <param name="drawFrame">
+        /// <param name="incrementFrameCount">
         /// Draw a frame.
         /// </param>
-        protected virtual void RawTick(TimeSpan elapsedTimePerUpdate, int updateCount = 1, float drawInterpolationFactor = 0, bool drawFrame = true)
+        protected virtual void RawTick(TimeSpan elapsedTimePerUpdate, int updateCount = 1, float drawInterpolationFactor = 0, int incrementFrameCount = 0)
         {
             bool beginDrawSuccessful = false;
             TimeSpan totalElapsedTime = TimeSpan.Zero;
@@ -636,7 +636,7 @@ namespace Stride.Games
                 // Reset the time of the next frame
                 for (int i = 0; i < updateCount && !IsExiting; i++)
                 {
-                    UpdateTime.Update(UpdateTime.Total + elapsedTimePerUpdate, elapsedTimePerUpdate, true);
+                    UpdateTime.Update(UpdateTime.Total + elapsedTimePerUpdate, elapsedTimePerUpdate, incrementFrameCount);
                     using (Profiler.Begin(GameProfilingKeys.GameUpdate))
                     {
                         Update(UpdateTime);
@@ -646,11 +646,11 @@ namespace Stride.Games
 
                 totalElapsedTime += elapsedTimePerUpdate;
 
-                if (drawFrame && !IsExiting && GameSystems.IsFirstUpdateDone)
+                if (incrementFrameCount != 0 && !IsExiting && GameSystems.IsFirstUpdateDone)
                 {
                     DrawInterpolationFactor = drawInterpolationFactor;
                     DrawTime.Factor = UpdateTime.Factor;
-                    DrawTime.Update(DrawTime.Total + totalElapsedTime, totalElapsedTime, true);
+                    DrawTime.Update(DrawTime.Total + totalElapsedTime, totalElapsedTime, 1);
 
                     var profilingDraw = Profiler.Begin(GameProfilingKeys.GameDrawFPS);
                     var profiler = Profiler.Begin(GameProfilingKeys.GameDraw);

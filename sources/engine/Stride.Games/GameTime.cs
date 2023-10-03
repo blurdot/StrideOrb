@@ -119,7 +119,7 @@ namespace Stride.Games
         }
 
 
-        public void Update(TimeSpan totalGameTime, TimeSpan elapsedGameTime, bool incrementFrameCount)
+        public void Update(TimeSpan totalGameTime, TimeSpan elapsedGameTime, int incrementFrameCount)
         {
             Total = totalGameTime;
             Elapsed = elapsedGameTime;
@@ -127,7 +127,7 @@ namespace Stride.Games
 
             FramePerSecondUpdated = false;
 
-            if (incrementFrameCount)
+            if (incrementFrameCount != 0)
             {
                 accumulatedElapsedTime += elapsedGameTime;
                 var accumulatedElapsedGameTimeInSecond = accumulatedElapsedTime.TotalSeconds;
@@ -140,14 +140,14 @@ namespace Stride.Games
                     FramePerSecondUpdated = true;
                 }
 
-                accumulatedFrameCountPerSecond++;
-                FrameCount++;
+                accumulatedFrameCountPerSecond += incrementFrameCount;
+                FrameCount += incrementFrameCount;
             }
         }
 
         internal void Reset(TimeSpan totalGameTime)
         {
-            Update(totalGameTime, TimeSpan.Zero, false);
+            Update(totalGameTime, TimeSpan.Zero, 0);
             accumulatedElapsedTime = TimeSpan.Zero;
             accumulatedFrameCountPerSecond = 0;
             FrameCount = 0;

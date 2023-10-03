@@ -91,7 +91,7 @@ namespace Stride.Core.Diagnostics
         /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
-            return $"{(Module != null ? $"[{Module}]: " : string.Empty)}{Type}: {Text}{(Exception != null ? $". {Exception}" : string.Empty)}";
+            return $"{(Module != null ? $"[{Module}]: " : string.Empty)}{Text}{(Exception != null ? $". {Exception}" : string.Empty)}";
         }
     }
 }

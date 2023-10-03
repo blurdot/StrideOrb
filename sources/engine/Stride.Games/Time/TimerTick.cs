@@ -191,6 +191,16 @@ namespace Stride.Games.Time
         }
 
         /// <summary>
+        /// Use this for rewinding to a specific tick.
+        /// </summary>
+        public void SetTo(long tick)
+        {
+            TotalTime = TimeSpan.FromTicks(tick);
+            TotalTimeWithPause = TotalTime;
+            ElapsedTime = TimeSpan.Zero;
+        }
+
+        /// <summary>
         /// Pauses this instance.
         /// </summary>
         public void Pause()
